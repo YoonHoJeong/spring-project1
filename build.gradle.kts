@@ -5,6 +5,8 @@ plugins {
 	kotlin("plugin.spring") version "1.8.22"
 	id("org.springframework.boot") version "2.7.18"
 	id("io.spring.dependency-management") version "1.1.6"
+
+	id("com.google.cloud.tools.jib") version "3.3.2"
 }
 
 group = "study-spring"
