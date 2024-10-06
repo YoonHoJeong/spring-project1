@@ -1,7 +1,6 @@
 package study_spring.pingpong.game.controller
 
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -11,7 +10,6 @@ import study_spring.pingpong.game.model.GameRecord
 import study_spring.pingpong.game.service.GameService
 import javax.validation.Valid
 import javax.validation.constraints.Min
-import javax.validation.constraints.NotNull
 
 @RestController
 @RequestMapping("/game")

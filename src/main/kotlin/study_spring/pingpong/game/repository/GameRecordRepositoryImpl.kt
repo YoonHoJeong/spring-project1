@@ -10,10 +10,6 @@ class GameRecordRepositoryImpl: GameRecordRepository {
     private val records = mutableListOf<GameRecord>()
     private val idGenerator = AtomicLong(1)
 
-    override fun findById(id: Long): GameRecord? {
-        return records.find { s -> s.id == id }
-    }
-
     override fun findAll(): List<GameRecord> {
         return records.sortedBy { score -> score.score }
     }
