@@ -1,6 +1,6 @@
-package study_spring.pingpong.repository.game
+package study_spring.pingpong.game.repository
 
-import study_spring.pingpong.model.game.GameRecord
+import study_spring.pingpong.game.model.GameRecord
 
 interface GameRecordRepository {
     fun findById(id: Long): GameRecord?

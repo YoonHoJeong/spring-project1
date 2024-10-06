@@ -1,4 +1,4 @@
-package study_spring.pingpong.controller
+package study_spring.pingpong.ping.controller
 
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.bind.annotation.GetMapping

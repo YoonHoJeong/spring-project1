@@ -1,4 +1,4 @@
-package study_spring.pingpong.model.game
+package study_spring.pingpong.game.model
 
 import java.time.Instant
 
