@@ -4,7 +4,7 @@ spring:
   pong:
     value: poooooooooong22
   datasource:
-    url: jdbc:mysql://localhost:3307/jpa-practice
+    url: jdbc:mysql://localhost:3307/jpa_practice
     username: root
     password: 8941
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -13,3 +13,10 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+
+  # dataSource 값을 사용한다.
+  flyway:
+      enabled: true
+      clean-disabled: true
+      # 현재 db를 기준으로 migration script를 적용
+      baseline-on-migration: true
