@@ -3,3 +3,13 @@ spring:
     name: pingpong
   pong:
     value: poooooooooong22
+  datasource:
+    url: jdbc:mysql://localhost:3307/jpa-practice
+    username: root
+    password: 8941
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    database: mysql
+    hibernate:
+      ddl-auto: update
+    show-sql: true

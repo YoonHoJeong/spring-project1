@@ -1,10 +1,11 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-	kotlin("jvm") version "1.8.22"
-	kotlin("plugin.spring") version "1.8.22"
 	id("org.springframework.boot") version "2.7.18"
 	id("com.google.cloud.tools.jib") version "3.3.2"
+	kotlin("jvm") version "1.8.22"
+	kotlin("plugin.spring") version "1.8.22"
+	kotlin("plugin.jpa") version "1.8.22"
 }
 
 group = "study-spring"
@@ -25,6 +26,8 @@ dependencies {
 
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
+	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+	runtimeOnly("com.mysql:mysql-connector-j")
 
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
