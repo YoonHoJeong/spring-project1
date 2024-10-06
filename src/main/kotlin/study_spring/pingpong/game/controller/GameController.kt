@@ -1,23 +1,20 @@
 package study_spring.pingpong.game.controller
 
-import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.http.HttpStatus
+import org.springframework.web.bind.annotation.*
 import study_spring.pingpong.game.model.GameRecord
 import study_spring.pingpong.game.service.GameService
+import study_spring.pingpong.user.model.UserDto
 import javax.validation.Valid
 import javax.validation.constraints.Min
-import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.NotNull
 
 @RestController
-@RequestMapping("/game")
+@RequestMapping("/games")
 class GameController(private val gameService: GameService) {
     data class CreateRecordRequestBody(
         @field:Min(value = 0, message = "Score must be at least 0")
+        @field:NotNull
         val score: Int,
 
         @field:NotNull
@@ -26,27 +23,51 @@ class GameController(private val gameService: GameService) {
 
     data class GetLeaderBoardResponseDto(
         val avg: Double,
-        val maxScoreRecord: GameRecord?
+        val maxScoreRecord: GameRecordDto?
     )
 
+    data class GameRecordDto(
+        val score: Int,
+        val id: Long,
+        val user: UserDto,
+    ) {
+        companion object {
+            fun from(gameRecord: GameRecord):GameRecordDto {
+                return GameRecordDto(
+                    gameRecord.score,
+                    gameRecord.id,
+                    UserDto.from(gameRecord.user)
+                )
+            }
+        }
+    }
+
+    @GetMapping("/all")
+    fun getAllRecords(): List<GameRecordDto> {
+        return gameService.findAll().map { GameRecordDto.from(it) }
+    }
+
     @GetMapping("/leaderboard")
-    fun getLeaderBoard(): ResponseEntity<GetLeaderBoardResponseDto> {
+    fun getLeaderBoard(): GetLeaderBoardResponseDto {
         val avg = gameService.getAvgScore()
         val maxScoreRecord = gameService.getMaxScoreRecord()
 
-        return ResponseEntity.ok(
-            GetLeaderBoardResponseDto(
-                avg,
-                maxScoreRecord
-            )
+        return GetLeaderBoardResponseDto(
+            avg,
+            maxScoreRecord = maxScoreRecord?.let { GameRecordDto.from(it) }
         )
     }
 
-    @PostMapping("/save")
-    fun createRecord(@Valid @RequestBody request: CreateRecordRequestBody): ResponseEntity<GameRecord> {
+    @PostMapping("/record")
+    @ResponseStatus(HttpStatus.CREATED)
+    fun createRecord(@Valid @RequestBody request: CreateRecordRequestBody): GameRecordDto {
         val (score, userId) = request
         val newRecord = gameService.createGameRecord(score, userId)
-        return ResponseEntity.ok(newRecord)
+        return GameRecordDto(
+            id = newRecord.id,
+            score = newRecord.score,
+            user = UserDto.from(newRecord.user),
+        )
     }
 }
 

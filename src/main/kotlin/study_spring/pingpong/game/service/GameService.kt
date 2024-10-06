@@ -12,6 +12,10 @@ class GameService(
     private val gameRecordRepository: GameRecordRepository,
     private val userRepository: UserRepository
 ) {
+    fun findAll(): List<GameRecord> {
+        return gameRecordRepository.findAll()
+    }
+
      fun getAvgScore(): Double {
         val records = gameRecordRepository.findAll()
         return if (records.isEmpty()) {
