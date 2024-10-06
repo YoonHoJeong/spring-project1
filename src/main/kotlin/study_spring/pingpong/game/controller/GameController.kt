@@ -10,13 +10,18 @@ import study_spring.pingpong.game.model.GameRecord
 import study_spring.pingpong.game.service.GameService
 import javax.validation.Valid
 import javax.validation.constraints.Min
+import javax.validation.constraints.NotEmpty
+import javax.validation.constraints.NotNull
 
 @RestController
 @RequestMapping("/game")
 class GameController(private val gameService: GameService) {
     data class CreateRecordRequestBody(
         @field:Min(value = 0, message = "Score must be at least 0")
-        val score: Int
+        val score: Int,
+
+        @field:NotNull
+        val userId: Long
     )
 
     data class GetLeaderBoardResponseDto(
@@ -39,7 +44,8 @@ class GameController(private val gameService: GameService) {
 
     @PostMapping("/save")
     fun createRecord(@Valid @RequestBody request: CreateRecordRequestBody): ResponseEntity<GameRecord> {
-        val newRecord = gameService.createGameRecord(request.score)
+        val (score, userId) = request
+        val newRecord = gameService.createGameRecord(score, userId)
         return ResponseEntity.ok(newRecord)
     }
 }

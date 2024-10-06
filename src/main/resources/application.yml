@@ -11,7 +11,8 @@ spring:
   jpa:
     database: mysql
     hibernate:
-      ddl-auto: update
+      # update -> validate, 그래야 hibernate가 아니라 flyway가 db schema 업데이트 주도권을 가짐
+      ddl-auto: validate
     show-sql: true
 
   # dataSource 값을 사용한다.

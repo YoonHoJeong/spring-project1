@@ -3,10 +3,15 @@ package study_spring.pingpong.game.service
 import org.springframework.stereotype.Service
 import study_spring.pingpong.game.model.GameRecord
 import study_spring.pingpong.game.repository.GameRecordRepository
+import study_spring.pingpong.user.repository.UserRepository
+import java.lang.IllegalArgumentException
 import java.time.Instant
 
 @Service
-class GameService(private val gameRecordRepository: GameRecordRepository) {
+class GameService(
+    private val gameRecordRepository: GameRecordRepository,
+    private val userRepository: UserRepository
+) {
      fun getAvgScore(): Double {
         val records = gameRecordRepository.findAll()
         return if (records.isEmpty()) {
@@ -21,13 +26,18 @@ class GameService(private val gameRecordRepository: GameRecordRepository) {
                 .thenBy { it.createdAt }))
     }
 
-     fun createGameRecord(score: Int): GameRecord {
+     fun createGameRecord(score: Int, userId: Long): GameRecord {
+         val user = userRepository.findById(userId)
+         if (user.isEmpty) {
+             throw IllegalArgumentException() // fixme
+         }
         return gameRecordRepository.save(
             GameRecord(
-            0,
-            score,
-            createdAt = Instant.now()
-        )
+                0,
+                score,
+                createdAt = Instant.now(),
+                user.get(),
+            )
         )
     }
 }
