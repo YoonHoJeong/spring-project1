@@ -3,3 +3,33 @@ spring:
     name: pingpong
   pong:
     value: poooooooooong22
+  datasource:
+    url: jdbc:mysql://localhost:3307/jpa_practice
+    username: root
+    password: 8941
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    database: mysql
+    hibernate:
+      # update -> validate, 그래야 hibernate가 아니라 flyway가 db schema 업데이트 주도권을 가짐
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      # Hibernate 통계 활성화
+      hibernate:
+        generate_statistics: true
+        format_sql: true
+
+  # dataSource 값을 사용한다.
+  flyway:
+    enabled: true
+    clean-disabled: true
+    # 현재 db를 기준으로 migration script를 적용
+    baseline-on-migration: true
+
+logging:
+  level:
+    org:
+      hibernate:
+        stat: DEBUG
+
