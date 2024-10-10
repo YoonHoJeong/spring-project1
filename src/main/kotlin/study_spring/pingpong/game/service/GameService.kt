@@ -1,6 +1,7 @@
 package study_spring.pingpong.game.service
 
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import study_spring.pingpong.common.dto.PageableRequest
 import study_spring.pingpong.game.model.GameRecord
@@ -22,18 +23,11 @@ class GameService(
     }
 
     fun getAvgScore(): Double {
-        val records = gameRecordRepository.findAll()
-        return if (records.isEmpty()) {
-            0.0 // 빈 컬렉션일 경우 0.0 반환
-        } else {
-            records.map { it.score }.average()
-        }
+        return gameRecordRepository.getAverageScore()
     }
 
     fun getMaxScoreRecord(): GameRecord? {
-        return gameRecordRepository.findAll()
-            .maxWithOrNull((compareBy<GameRecord> { it.score }
-                .thenBy { it.createdAt }))
+        return gameRecordRepository.findTopByOrderByScoreDescCreatedAtAsc(PageRequest.of(0, 10)).firstOrNull()
     }
 
     fun createGameRecord(score: Int, userId: Long): GameRecord {
