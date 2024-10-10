@@ -2,9 +2,11 @@ package study_spring.pingpong.game.controller
 
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
-import study_spring.pingpong.game.model.GameRecord
+import study_spring.pingpong.common.dto.PageResponse
+import study_spring.pingpong.common.dto.PageableRequest
+import study_spring.pingpong.game.dto.GameRecordDto
 import study_spring.pingpong.game.service.GameService
-import study_spring.pingpong.user.model.UserDto
+import study_spring.pingpong.user.dto.UserDto
 import javax.validation.Valid
 import javax.validation.constraints.Min
 import javax.validation.constraints.NotNull
@@ -18,33 +20,31 @@ class GameController(private val gameService: GameService) {
         val score: Int,
 
         @field:NotNull
-        val userId: Long
+        val userId: Long,
     )
 
     data class GetLeaderBoardResponseDto(
         val avg: Double,
-        val maxScoreRecord: GameRecordDto?
+        val maxScoreRecord: GameRecordDto?,
     )
 
-    data class GameRecordDto(
-        val score: Int,
-        val id: Long,
-        val user: UserDto,
-    ) {
-        companion object {
-            fun from(gameRecord: GameRecord):GameRecordDto {
-                return GameRecordDto(
-                    gameRecord.score,
-                    gameRecord.id,
-                    UserDto.from(gameRecord.user)
-                )
-            }
-        }
+    @GetMapping("/all")
+    fun getAllRecords(
+        @RequestParam(defaultValue = "0") page: Int,
+        @RequestParam(defaultValue = "10") size: Int,
+    ): PageResponse<GameRecordDto> {
+        return gameService.findAll(PageableRequest(page, size)).map { GameRecordDto.from(it) }
+            .let { PageResponse.fromPage(it) }
     }
 
-    @GetMapping("/all")
-    fun getAllRecords(): List<GameRecordDto> {
-        return gameService.findAll().map { GameRecordDto.from(it) }
+    @GetMapping
+    fun getGameRecordsByUserId(
+        @RequestParam userId: Long,
+        @RequestParam(defaultValue = "0") page: Int,
+        @RequestParam(defaultValue = "10") size: Int,
+    ): PageResponse<GameRecordDto> {
+        val records = gameService.findByUserId(userId, PageableRequest(page, size))
+        return records.map { GameRecordDto.from(it) }.let { PageResponse.fromPage(it) }
     }
 
     @GetMapping("/leaderboard")

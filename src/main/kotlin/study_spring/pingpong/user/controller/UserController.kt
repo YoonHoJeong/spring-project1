@@ -3,7 +3,9 @@ package study_spring.pingpong.user.controller
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
-import study_spring.pingpong.user.model.UserDto
+import study_spring.pingpong.common.dto.PageResponse
+import study_spring.pingpong.common.dto.PageableRequest
+import study_spring.pingpong.user.dto.UserDto
 import study_spring.pingpong.user.service.UserService
 import javax.validation.Valid
 import javax.validation.constraints.NotBlank
@@ -13,13 +15,16 @@ import javax.validation.constraints.NotBlank
 class UserController(private val userService: UserService) {
     data class CreateUserRequestDto(
         @field:NotBlank(message = "Username must not be empty")
-        val username: String
+        val username: String,
     )
 
     @GetMapping("/all")
-    fun getAllUsers(): List<UserDto> {
-        val users = userService.findAll()
-        return users.map { UserDto.from(it) }
+    fun getAllUsers(
+        @RequestParam(defaultValue = "0") page: Int,
+        @RequestParam(defaultValue = "10") size: Int,
+    ): PageResponse<UserDto> {
+        return userService.findAll(PageableRequest(page, size)).map { UserDto.from((it)) }
+            .let { PageResponse.fromPage(it) }
     }
 
     @GetMapping

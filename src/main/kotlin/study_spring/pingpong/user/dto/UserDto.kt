@@ -1,8 +1,10 @@
-package study_spring.pingpong.user.model
+package study_spring.pingpong.user.dto
+
+import study_spring.pingpong.user.model.User
 
 data class UserDto(
     val id: Long?,
-    val username: String
+    val username: String,
 ) {
     companion object {
         fun from(user: User): UserDto {
