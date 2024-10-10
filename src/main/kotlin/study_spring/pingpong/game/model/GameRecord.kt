@@ -5,7 +5,12 @@ import java.time.Instant
 import javax.persistence.*
 
 @Entity
-@Table(name = "game_records")
+@Table(
+    name = "game_records",
+    indexes = [
+        Index(name = "idx_score_created_at", columnList = "score, createdAt"),
+    ]
+)
 data class GameRecord(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,5 +20,5 @@ data class GameRecord(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    val user: User
+    val user: User,
 )
